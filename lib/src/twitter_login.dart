@@ -34,7 +34,8 @@ class TwitterLogin {
 
   static const _channel = const MethodChannel('twitter_login');
   static final _eventChannel = EventChannel('twitter_login/event');
-  static final Stream<dynamic> _eventStream = _eventChannel.receiveBroadcastStream();
+  static final Stream<dynamic> _eventStream =
+      _eventChannel.receiveBroadcastStream();
 
   /// constructor
   TwitterLogin({
@@ -91,14 +92,17 @@ class TwitterLogin {
     try {
       if (Platform.isIOS) {
         /// Login to Twitter account with SFAuthenticationSession or ASWebAuthenticationSession.
-        resultURI = await authBrowser.doAuth(requestToken.authorizeURI, uri.scheme);
+        resultURI =
+            await authBrowser.doAuth(requestToken.authorizeURI, uri.scheme);
       } else if (Platform.isAndroid) {
         // Login to Twitter account with chrome_custom_tabs.
-        final success = await authBrowser.open(requestToken.authorizeURI, uri.scheme);
+        final success =
+            await authBrowser.open(requestToken.authorizeURI, uri.scheme);
         if (!success) {
           throw PlatformException(
             code: '200',
-            message: 'Could not open browser, probably caused by unavailable custom tabs.',
+            message:
+                'Could not open browser, probably caused by unavailable custom tabs.',
           );
         }
         resultURI = await completer.future;
@@ -136,12 +140,13 @@ class TwitterLogin {
         authTokenSecret: token.authTokenSecret,
         status: TwitterLoginStatus.loggedIn,
         errorMessage: '',
-        user: await User.getUserData(
-          apiKey,
-          apiSecretKey,
-          token.authToken,
-          token.authTokenSecret,
-        ),
+        // user: await User.getUserData(
+        //   apiKey,
+        //   apiSecretKey,
+        //   token.authToken,
+        //   token.authTokenSecret,
+        // ),
+        user: User(<String, dynamic>{'id': token.userId}),
       );
     } on CanceledByUserException {
       return AuthResult(
